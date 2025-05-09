@@ -1,0 +1,7 @@
+C:\Users\guyfi\source\repos\Ex02\Ex02\obj\Debug\Ex02.csproj.AssemblyReference.cache
+C:\Users\guyfi\source\repos\Ex02\Ex02\obj\Debug\Ex02.csproj.CoreCompileInputs.cache
+C:\Users\guyfi\source\repos\Ex02\Ex02\bin\Debug\Ex02.exe.config
+C:\Users\guyfi\source\repos\Ex02\Ex02\bin\Debug\Ex02.exe
+C:\Users\guyfi\source\repos\Ex02\Ex02\bin\Debug\Ex02.pdb
+C:\Users\guyfi\source\repos\Ex02\Ex02\obj\Debug\Ex02.exe
+C:\Users\guyfi\source\repos\Ex02\Ex02\obj\Debug\Ex02.pdb
