@@ -8,7 +8,7 @@ namespace Ex02
     {
         private readonly Random r_RandomGenerator = new Random();
         private readonly char[] r_CharsBank = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
-        private const int k_SecretWordLength = 4;     //remember CONST MEANS #DEFINE IN CSHARP
+        public const int k_SecretWordLength = 4;     //remember CONST MEANS #DEFINE IN CSHARP
 
         public string GenerateSecretWord()
         {
@@ -24,6 +24,5 @@ namespace Ex02
 
             return secretWord.ToString();
         }
-        
     }
 }
