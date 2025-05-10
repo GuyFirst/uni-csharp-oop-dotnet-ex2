@@ -4,5 +4,6 @@ namespace Ex02
 {
     public class Guess
     {
+
     }
 }

@@ -4,9 +4,14 @@ namespace Ex02
 {
     public class Program
     {
-        public void Main()
+        public static void Main()
         {
-            Console.WriteLine("bvdbda");
+           InputValidator validator = new InputValidator();
+
+            if (!validator.IsInputValid(Console.ReadLine()))
+            {
+                Console.WriteLine(validator.MessegeToShowTheUser);
+            }
         }
     }
 }
