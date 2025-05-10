@@ -18,7 +18,7 @@ Classes for "Bulls and Cows" C# Console Game (Console-Focused Architecture)
 - Contains guessed letters and feedback result (V/X)
 - Handles comparison to the secret code
 
-4. SecretWordGenerator - ROY
+4. SecretWordGenerator - #ROY#
 - Creates a 4-letter secret code (A–H, no duplicates)
 - Uses System.Random internally
 
@@ -28,7 +28,7 @@ Classes for "Bulls and Cows" C# Console Game (Console-Focused Architecture)
   - All between A–H
   - No duplicates
 
-6. ConsoleUI - ROY
+6. ConsoleUI - #ROY#
 - Handles all input/output with the user
 - Shows the board based on data from GameState
 - Gets user guesses
