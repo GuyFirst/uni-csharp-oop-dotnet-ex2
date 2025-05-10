@@ -7,7 +7,7 @@ namespace Ex02
     {
         private const int k_NumberOfValidCharactersInUserGuess = 4;
         private const int k_NumberOfUniqueLetters = 8;
-        public string MessegeToShowTheUser {  get; set; }
+        public string MessegeToShowTheUser {  get; private set; }
         public bool IsInputValid(string i_Input)
         {
             MessegeToShowTheUser = string.Empty;
