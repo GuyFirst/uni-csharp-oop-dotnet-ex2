@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F895305-6701-43B8-83A2-1810D5378E73}</ProjectGuid>
+    <ProjectGuid>{9506067F-6295-429E-A82C-4D83C4893B64}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Ex02</RootNamespace>
     <AssemblyName>Ex02</AssemblyName>
@@ -36,7 +36,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleUI.cs" />
+    <Compile Include="GameManager.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="Guess.cs" />
+    <Compile Include="InputValidator.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="SecretWordGenerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

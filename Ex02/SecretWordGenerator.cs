@@ -2,8 +2,7 @@
 
 namespace Ex02
 {
-    public class Program
+    public class SecretWordGenerator
     {
-
     }
 }
