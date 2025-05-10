@@ -6,12 +6,13 @@ namespace Ex02
     {
         public static void Main()
         {
-           InputValidator validator = new InputValidator();
+            InputValidator validator = new InputValidator();
 
             if (!validator.IsInputValid(Console.ReadLine()))
             {
-                Console.WriteLine(validator.MessegeToShowTheUser);
+                Console.WriteLine(validator.ReasonOfBadInput);
             }
+            
         }
     }
 }
