@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Ex02
 {
@@ -11,17 +12,17 @@ namespace Ex02
 
         public string GenerateSecretWord()
         {
-            string secretWord = string.Empty;
+            StringBuilder secretWord = new StringBuilder();
             List<char> availableChars = new List<char>(r_CharsBank);
 
             for (int i = 0; i < k_SecretWordLength; i++)
             {
                 int randomIndex = r_RandomGenerator.Next(availableChars.Count);
-                secretWord += availableChars[randomIndex];
+                secretWord.Append(availableChars[randomIndex]);
                 availableChars.RemoveAt(randomIndex);
             }
 
-            return secretWord;
+            return secretWord.ToString();
         }
         
     }
