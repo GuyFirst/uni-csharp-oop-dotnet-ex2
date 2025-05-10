@@ -1,0 +1,41 @@
+Classes for "Bulls and Cows" C# Console Game (Console-Focused Architecture)
+
+1. GameManager
+- Manages the entire flow of the game
+- Initializes new game session
+- Calls methods from ConsoleUI to interact with the user
+- Tracks number of guesses and checks win/lose state
+
+2. GameState (wrapper of logic)
+- Holds the computer's secret code
+- Holds the list of previous user guesses
+- Checks if the guess is correct
+- Calculates V/X feedback for guesses
+- Pure logic only — no Console printing here
+
+3. Guess - GUY
+- Represents a single guess attempt by the user
+- Contains guessed letters and feedback result (V/X)
+- Handles comparison to the secret code
+
+4. SecretWordGenerator - ROY
+- Creates a 4-letter secret code (A–H, no duplicates)
+- Uses System.Random internally
+
+5. InputValidator - GUY - finished
+- Validates if user input is valid:
+  - Exactly 4 characters
+  - All between A–H
+  - No duplicates
+
+6. ConsoleUI - ROY
+- Handles all input/output with the user
+- Shows the board based on data from GameState
+- Gets user guesses
+- Displays messages like victory/defeat/invalid input
+- Clears screen using Ex02.ConsoleUtils.Screen.Clear()
+
+Notes:
+- GameState, Guess, SecretWordGenerator, and InputValidator contain no Console.Read/Write
+- ConsoleUI is the only class with Console interactions
+- GameManager bridges between ConsoleUI and the game logic
