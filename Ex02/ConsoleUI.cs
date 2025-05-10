@@ -18,12 +18,19 @@ namespace Ex02
 
             for (int turnIndex = 0; turnIndex < i_MaxTries; turnIndex++)
             {
-                string historyGuess = i_GameHistory[turnIndex, k_Guess];
-                string historyResult = i_GameHistory[turnIndex, k_Result];
-                string spacedHistoryGuess = string.Join(" ", historyGuess.ToCharArray());
-                string spacedHistoryResult = string.Join(" ", historyResult.ToCharArray());
+                string historyGuess = i_GameHistory[turnIndex, k_Guess] ?? "";
+                string historyResult = i_GameHistory[turnIndex, k_Result] ?? "";
 
-                Console.WriteLine($"| {spacedHistoryGuess} |{spacedHistoryResult}|");
+                if (string.IsNullOrEmpty(historyGuess) && string.IsNullOrEmpty(historyResult))
+                {
+                    Console.WriteLine("|         |       |");
+                }
+                else
+                {
+                    string spacedHistoryGuess = string.Join(" ", historyGuess.ToCharArray());
+                    string spacedHistoryResult = string.Join(" ", historyResult.ToCharArray());
+                    Console.WriteLine($"| {spacedHistoryGuess} |{spacedHistoryResult}|");
+                }
                 Console.WriteLine("|=========|=======|");
             }
 
