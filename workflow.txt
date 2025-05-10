@@ -13,7 +13,7 @@ Classes for "Bulls and Cows" C# Console Game (Console-Focused Architecture)
 - Calculates V/X feedback for guesses
 - Pure logic only — no Console printing here
 
-3. Guess - GUY
+3. Guess - GUY - finished
 - Represents a single guess attempt by the user
 - Contains guessed letters and feedback result (V/X)
 - Handles comparison to the secret code
