@@ -4,7 +4,7 @@ namespace Ex02
 {
     public class ConsoleUI      //ROY
     {
-        private const int k_Guess = 0;     //remember CONST MEANS #DEFINE IN CSHARP
+        private const int k_Guess = 0;      //remember CONST MEANS #DEFINE IN CSHARP
         private const int k_Result = 1;     //remember CONST MEANS #DEFINE IN CSHARP
         
         public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries)
