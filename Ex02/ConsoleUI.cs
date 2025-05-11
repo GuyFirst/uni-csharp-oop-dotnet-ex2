@@ -4,9 +4,6 @@ namespace Ex02
 {
     public class ConsoleUI      //ROY
     {
-        private const int k_Guess = 0;      //remember CONST MEANS #DEFINE IN CSHARP
-        private const int k_Result = 1;     //remember CONST MEANS #DEFINE IN CSHARP
-
         public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries)
         {
             ConsoleUtils.Screen.Clear();
@@ -18,8 +15,8 @@ namespace Ex02
 
             for (int turnIndex = 0; turnIndex < i_MaxTries; turnIndex++)
             {
-                string historyGuess = i_GameHistory[turnIndex, k_Guess] ?? "";
-                string historyResult = i_GameHistory[turnIndex, k_Result] ?? "";
+                string historyGuess = i_GameHistory[turnIndex, GameData.k_Guess] ?? "";
+                string historyResult = i_GameHistory[turnIndex, GameData.k_Result] ?? "";
 
                 if (string.IsNullOrEmpty(historyGuess) && string.IsNullOrEmpty(historyResult))
                 {
@@ -70,7 +67,7 @@ namespace Ex02
             while (!isUserInputValid)
             {
                 userInput = Console.ReadLine();
-                userInput = userInput.ToUpper();
+                userInput = userInput?.ToUpper();
                 isUserInputValid = inputValidator.IsInputValid(userInput, out o_UserDecidedToQuit);
                 if (!isUserInputValid && !o_UserDecidedToQuit)
                 {
