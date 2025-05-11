@@ -26,15 +26,15 @@ namespace Ex02
             GameData currentGameData = new GameData(secretWord, ConsoleUI.AskUserToEnterNumberOfGuesses());
             GuessAttempt activeGuessAttempt = new GuessAttempt(secretWord);
             string userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit);
-            bool hasGameEnded = (WinFlag || currentGameData.m_RemaningNumberOfGuesses <= 0);
+            bool hasGameEnded = (WinFlag || currentGameData.m_RemainingNumberOfGuesses <= 0);
             
             while (!hasGameEnded) 
             {
                 string feedbackOnGuess = activeGuessAttempt.GiveFeedbackOnGuess(userInputGuess);
 
-                currentGameData.AddGuessAndFeedback(userInputGuess, feedbackOnGuess, currentGameData.m_RemaningNumberOfGuesses);
+                currentGameData.AddGuessAndFeedback(userInputGuess, feedbackOnGuess);
                 WinFlag = (feedbackOnGuess.Equals(k_WinnerResult));
-                hasGameEnded = WinFlag || (--currentGameData.m_RemaningNumberOfGuesses <= 0);
+                hasGameEnded = WinFlag || (--currentGameData.m_RemainingNumberOfGuesses <= 0);
                 ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
                 if(!hasGameEnded)
                 {
@@ -43,18 +43,18 @@ namespace Ex02
             }
 
             QuittingGameFlag = o_UserDecidedToQuit;
-            manageEndOfGame(currentGameData.r_MaxUserGuesses, currentGameData.m_RemaningNumberOfGuesses);
+            manageEndOfGame(currentGameData.r_MaxUserGuesses, currentGameData.m_RemainingNumberOfGuesses);
         }
 
         private void manageEndOfGame(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
         {
             if (WinFlag)
             {
-                //console greet winner
+                ConsoleUI.PrintWinMessage(i_StartingNumberOfGuess, i_NumberOfGuessingRemained);
             }
             else if (!QuittingGameFlag)
             {
-                //console tell user he lost
+                ConsoleUI.PrintLoseMessage();
             }
             else
             {
