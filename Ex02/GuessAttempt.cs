@@ -40,7 +40,6 @@ namespace Ex02
             StringBuilder feedback = new StringBuilder();
             feedback.Append('V', countV);
             feedback.Append('X', countX);
-            feedback.Append(' ', i_UserGuess.Length - countV - countX);
 
             return feedback.ToString();
         }
