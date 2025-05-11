@@ -4,16 +4,25 @@ namespace Ex02
 {
     public class ConsoleUI      //ROY
     {
-        public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries)
+        public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries, string i_SecretWord = null)
         {
-            const int k_ResultPrintPadding = 7;
-
             ConsoleUtils.Screen.Clear();
             Console.WriteLine("Current board status:");
             Console.WriteLine("|Pins:    |Result:|");
             Console.WriteLine("|=========|=======|");
-            Console.WriteLine("| # # # # |       |");
+
+            // If the game has ended, reveal the secret word
+            if (i_SecretWord != null)
+            {
+                string spacedSecretWord = string.Join(" ", i_SecretWord.ToCharArray());
+                Console.WriteLine($"| {spacedSecretWord} |       |");
+            }
+            else
+            {
+                Console.WriteLine("| # # # # |       |");
+            }
             Console.WriteLine("|=========|=======|");
+
             for (int turnIndex = 0; turnIndex < i_MaxTries; turnIndex++)
             {
                 string historyGuess = i_GameHistory[turnIndex, GameData.k_Guess] ?? "";
@@ -26,11 +35,9 @@ namespace Ex02
                 else
                 {
                     string spacedHistoryGuess = string.Join(" ", historyGuess.ToCharArray());
-                    string spacedHistoryResult =
-                        string.Join(" ", historyResult.ToCharArray()).PadRight(k_ResultPrintPadding);
+                    string spacedHistoryResult = string.Join(" ", historyResult.ToCharArray()).PadRight(7);
                     Console.WriteLine($"| {spacedHistoryGuess} |{spacedHistoryResult}|");
                 }
-
                 Console.WriteLine("|=========|=======|");
             }
 

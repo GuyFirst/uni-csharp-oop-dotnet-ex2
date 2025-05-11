@@ -33,7 +33,7 @@ namespace Ex02
             string userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit);
             bool hasGameEnded = (WinFlag || currentGameData.RemainingNumberOfGuesses <= 0);
 
-            while(!hasGameEnded)
+            while (!hasGameEnded)
             {
                 string feedbackOnGuess = activeGuessAttempt.GiveFeedbackOnGuess(userInputGuess);
 
@@ -41,18 +41,22 @@ namespace Ex02
                 ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
                 WinFlag = (feedbackOnGuess.Equals(k_WinnerResult));
                 hasGameEnded = WinFlag || (--currentGameData.RemainingNumberOfGuesses <= 0);
-                if(!hasGameEnded)
+                if (!hasGameEnded)
                 {
                     userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out o_UserDecidedToQuit);
                 }
             }
 
             QuittingGameFlag = o_UserDecidedToQuit;
+
+            // Reveal the secret word when the game ends
+            ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses, secretWord);
+
             bool playAgain = manageEndOfGame(
                 currentGameData.r_MaxUserGuesses,
                 currentGameData.RemainingNumberOfGuesses);
 
-            if(!playAgain)
+            if (!playAgain)
             {
                 QuittingGameFlag = true;
             }
