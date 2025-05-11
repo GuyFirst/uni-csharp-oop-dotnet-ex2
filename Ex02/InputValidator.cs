@@ -5,13 +5,19 @@ namespace Ex02
     {
         private const int k_NumberOfValidCharactersInUserGuess = 4;
         private const int k_NumberOfUniqueLetters = 8;
-        public string ReasonOfBadInput {  get; private set; }
-        public bool IsInputValid(string i_Input)
+        public string ReasonOfBadInput {  get; private set; } //TODO decide if changing to const
+        public bool IsInputValid(string i_Input, out bool o_UserDecidedToQuit)
         {
+            o_UserDecidedToQuit = false;
             ReasonOfBadInput = string.Empty;
-            bool isInputValid = true;
+            bool isInputValid = false;
 
-            if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
+            if(i_Input == "Q")
+            {
+                o_UserDecidedToQuit = true;
+                isInputValid = true;
+            }
+            else if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
             {
                 ReasonOfBadInput = "You did not submit 4 characters.\nPlease submit exactly 4 unique letters between A and H.";
                 isInputValid = false;
@@ -32,9 +38,8 @@ namespace Ex02
 
             foreach (char currentCharacter in i_Input)
             {
-                char upperChar = char.ToUpper(currentCharacter);
 
-                if (!(upperChar >= 'A' && upperChar <= 'H'))
+                if (!(currentCharacter >= 'A' && currentCharacter <= 'H'))
                 {
                     ReasonOfBadInput = !char.IsLetter(currentCharacter)
                         ? "You entered non letter characters."
@@ -43,7 +48,7 @@ namespace Ex02
                     break;
                 }
 
-                int index = upperChar - 'A';
+                int index = currentCharacter - 'A';
                 if (uniqueLetters[index])
                 {
                     ReasonOfBadInput = "Each letter must be UNIQUE.";
