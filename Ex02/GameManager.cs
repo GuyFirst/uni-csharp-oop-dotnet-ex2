@@ -7,57 +7,63 @@ namespace Ex02
     {
         public bool QuittingGameFlag { get; set; }
         public bool WinFlag { get; set; }
-        public bool LoseFlag { get; set; }
 
         public void StartNewGame()
         {
             while (true)
             {
                 runGame();
-                
-                //getting the response from consoleUI if the user wants to play a new game
-
                 if(QuittingGameFlag)
                 {
-                    return;
-                }
+                    break;
+                }    
             }
         }
-        
         
         private void runGame()
         {
-            int numberOfGuesses = ConsoleUI.AskUserToEnterNumberOfGuesses();
+            int numberOfGuessesRemaining = ConsoleUI.AskUserToEnterNumberOfGuesses();
             string secretWord = SecretWordGenerator.GenerateSecretWord();
-            GameState gameState = new GameState(secretWord, numberOfGuesses);
-            GuessAttempt guessAttempt = new GuessAttempt(secretWord);
-            string userGuess = ConsoleUI.AskFromUserToTakeAGuess(out bool o_GameOverFlag);
-           
-            bool stopTheGame = WinFlag || LoseFlag;
+            GameData currentGameData = new GameData(secretWord, numberOfGuessesRemaining);
+            GuessAttempt ActiveGuessAttempt = new GuessAttempt(secretWord);
+            string userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit);
+            bool HasGameEnded = WinFlag || numberOfGuessesRemaining <= 0;
 
-            while (!stopTheGame) 
+            while (!HasGameEnded) 
             {
-                string feedbackOnGuess = guessAttempt.GiveFeedbackOnGuess(userGuess);
-                if (feedbackOnGuess == "VVVV")
+                string feedbackOnGuess = ActiveGuessAttempt.GiveFeedbackOnGuess(userInputGuess);
+
+                WinFlag = (feedbackOnGuess == "VVVV");
+                HasGameEnded = WinFlag || (--numberOfGuessesRemaining <= 0);
+                currentGameData.addGuessAndFeedback(userInputGuess, feedbackOnGuess);
+                ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
+                if(!HasGameEnded)
                 {
-                    winningFlag = true;
-                }
-                gameState.addGuessAndFeedback(userGuess, feedbackOnGuess);
-                ConsoleUI.PrintBoard(gameState.GuessesAndResultsHistory, numberOfGuesses);
-                if(!stopTheGame)
-                {
-                    userGuess = ConsoleUI.AskFromUserToTakeAGuess(out o_GameOverFlag);
+                    userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out o_UserDecidedToQuit);
                 }      
             }
 
-          
-            //return
-
-
-
+            QuittingGameFlag = o_UserDecidedToQuit;
+            manageEndOfGame(currentGameData.r_MaxUserGuesses, numberOfGuessesRemaining);
         }
 
+        private void manageEndOfGame(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
+        {
+            if (WinFlag)
+            {
+                //console greet winner
+            }
+            else if (!QuittingGameFlag)
+            {
+                //console tell user he lost
+            }
+            else
+            {
+                //tell user goodbye 
+            }
 
+            //ask the user if he wants to play another game IF HE HAVENT DECIDED TO QUIT YET
+        }
 
 
 

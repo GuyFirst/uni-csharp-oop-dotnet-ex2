@@ -59,9 +59,9 @@ namespace Ex02
             return numberOfGuesses;
         }
 
-        public static string AskFromUserToTakeAGuess(out bool o_GameOverFlag)
+        public static string AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit)
         {
-            o_GameOverFlag = false;
+            o_UserDecidedToQuit = false;
             InputValidator inputValidator = new InputValidator();
             bool isUserInputValid = false;
             string userInput = null;
@@ -71,8 +71,8 @@ namespace Ex02
             {
                 userInput = Console.ReadLine();
                 userInput = userInput.ToUpper();
-                isUserInputValid = inputValidator.IsInputValid(userInput, out o_GameOverFlag);
-                if (!isUserInputValid && !o_GameOverFlag)
+                isUserInputValid = inputValidator.IsInputValid(userInput, out o_UserDecidedToQuit);
+                if (!isUserInputValid && !o_UserDecidedToQuit)
                 {
                     Console.WriteLine(inputValidator.ReasonOfBadInput);
                     Console.WriteLine("Please type your next guess <A B C D> or 'Q' to quit");

@@ -2,14 +2,14 @@
 
 namespace Ex02
 {
-    public class GameState
+    public class GameData
     {
         public string SecretWord { get; set; }
         public readonly int r_MaxUserGuesses;
         private const int k_ColumnSize = 2;
-        public string[,] GuessesAndResultsHistory { get; set; } //TOFO decide if result or feedback
+        public string[,] GuessesAndResultsHistory { get; set; } 
 
-        public GameState(string i_SecretWord, int i_MaxUserGuesses) 
+        public GameData(string i_SecretWord, int i_MaxUserGuesses) 
         {
             SecretWord = i_SecretWord;
             r_MaxUserGuesses = i_MaxUserGuesses;
