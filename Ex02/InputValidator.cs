@@ -6,15 +6,15 @@ namespace Ex02
         private const int k_NumberOfValidCharactersInUserGuess = 4;
         private const int k_NumberOfUniqueLetters = 8;
         public string ReasonOfBadInput {  get; private set; } //TODO decide if changing to const
-        public bool IsInputValid(string i_Input, out bool o_UserDecidedToQuit)
+        public bool IsInputValid(string i_Input, out bool io_UserDecidedToQuit)
         {
-            o_UserDecidedToQuit = false;
+            io_UserDecidedToQuit = false;
             ReasonOfBadInput = string.Empty;
             bool isInputValid = false;
 
             if(i_Input == "Q")
             {
-                o_UserDecidedToQuit = true;
+                io_UserDecidedToQuit = true;
                 isInputValid = true;
             }
             else if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
