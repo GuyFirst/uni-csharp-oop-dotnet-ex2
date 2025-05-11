@@ -6,18 +6,18 @@ namespace Ex02
 {
     public class SecretWordGenerator //ROY
     {
-        private readonly Random r_RandomGenerator = new Random();
-        private readonly char[] r_CharsBank = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+        private static readonly Random sr_RandomGenerator = new Random();
+        private static readonly char[] sr_CharsBank = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
         public const int k_SecretWordLength = 4;     //remember CONST MEANS #DEFINE IN CSHARP
 
-        public string GenerateSecretWord()
+        public static string GenerateSecretWord()
         {
             StringBuilder secretWord = new StringBuilder();
-            List<char> availableChars = new List<char>(r_CharsBank);
+            List<char> availableChars = new List<char>(sr_CharsBank);
 
             for (int i = 0; i < k_SecretWordLength; i++)
             {
-                int randomIndex = r_RandomGenerator.Next(availableChars.Count);
+                int randomIndex = sr_RandomGenerator.Next(availableChars.Count);
                 secretWord.Append(availableChars[randomIndex]);
                 availableChars.RemoveAt(randomIndex);
             }

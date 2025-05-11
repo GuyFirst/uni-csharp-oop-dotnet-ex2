@@ -5,12 +5,11 @@ namespace Ex02
 {
     public class GuessAttempt
     {
-        public string SecretCode { get; set; }
-       
+        public readonly string r_SecretCode;
 
         public GuessAttempt(string i_SecretCode)
         {
-            SecretCode = i_SecretCode;
+            r_SecretCode = i_SecretCode;
         }
         public string GiveFeedbackOnGuess(string i_UserGuess)
         {
@@ -19,9 +18,9 @@ namespace Ex02
 
             for (int i = 0; i < i_UserGuess.Length; ++i)
             {
-                for (int j = 0; j < SecretCode.Length; ++j)
+                for (int j = 0; j < r_SecretCode.Length; ++j)
                 {
-                    if (i_UserGuess[i] == SecretCode[j])
+                    if (i_UserGuess[i] == r_SecretCode[j])
                     {
                         if (i == j)
                         {
