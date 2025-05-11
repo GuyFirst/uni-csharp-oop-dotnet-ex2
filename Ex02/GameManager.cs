@@ -40,7 +40,7 @@ namespace Ex02
                 currentGameData.AddGuessAndFeedback(userInputGuess, feedbackOnGuess);
                 ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
                 WinFlag = (feedbackOnGuess.Equals(k_WinnerResult));
-                hasGameEnded = WinFlag || (--currentGameData.RemainingNumberOfGuesses <= 0);
+                hasGameEnded = (--currentGameData.RemainingNumberOfGuesses <= 0) || WinFlag;
                 if (!hasGameEnded)
                 {
                     userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out o_UserDecidedToQuit);
