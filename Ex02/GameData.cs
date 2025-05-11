@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ex02
+﻿namespace Ex02
 {
     public class GameData
     {
@@ -8,7 +6,7 @@ namespace Ex02
         public const int k_Result = 1;          //remember CONST MEANS #DEFINE IN CSHARP
         private const int k_ColumnSize = 2;     //remember CONST MEANS #DEFINE IN CSHARP
         public readonly int r_MaxUserGuesses;
-        public int m_RemainingNumberOfGuesses { get; set; }
+        public int RemainingNumberOfGuesses { get; set; }
         public string SecretWord { get; set; }
         public string[,] GuessesAndResultsHistory { get; set; }
 
@@ -16,14 +14,16 @@ namespace Ex02
         {
             SecretWord = i_SecretWord;
             r_MaxUserGuesses = i_MaxUserGuesses;
-            m_RemainingNumberOfGuesses = i_MaxUserGuesses;
+            RemainingNumberOfGuesses = i_MaxUserGuesses;
             GuessesAndResultsHistory = new string[r_MaxUserGuesses, k_ColumnSize];
         }
 
         public void AddGuessAndFeedback(string i_Guess, string i_Feedback)
         {
-            GuessesAndResultsHistory[m_RemainingNumberOfGuesses, k_Guess] = i_Guess;
-            GuessesAndResultsHistory[m_RemainingNumberOfGuesses, k_Result] = i_Feedback;
+            int currentGuessIndex = r_MaxUserGuesses - RemainingNumberOfGuesses;
+        
+            GuessesAndResultsHistory[currentGuessIndex, k_Guess] = i_Guess;
+            GuessesAndResultsHistory[currentGuessIndex, k_Result] = i_Feedback;
         }
     }
 }

@@ -6,13 +6,14 @@ namespace Ex02
     {
         public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries)
         {
+            const int k_ResultPrintPadding = 7;
+
             ConsoleUtils.Screen.Clear();
             Console.WriteLine("Current board status:");
             Console.WriteLine("|Pins:    |Result:|");
             Console.WriteLine("|=========|=======|");
             Console.WriteLine("| # # # # |       |");
             Console.WriteLine("|=========|=======|");
-
             for (int turnIndex = 0; turnIndex < i_MaxTries; turnIndex++)
             {
                 string historyGuess = i_GameHistory[turnIndex, GameData.k_Guess] ?? "";
@@ -25,12 +26,15 @@ namespace Ex02
                 else
                 {
                     string spacedHistoryGuess = string.Join(" ", historyGuess.ToCharArray());
-                    string spacedHistoryResult = string.Join(" ", historyResult.ToCharArray());
+                    string spacedHistoryResult =
+                        string.Join(" ", historyResult.ToCharArray()).PadRight(k_ResultPrintPadding);
                     Console.WriteLine($"| {spacedHistoryGuess} |{spacedHistoryResult}|");
                 }
+
                 Console.WriteLine("|=========|=======|");
             }
 
+            Console.WriteLine();
         }
 
         public static int AskUserToEnterNumberOfGuesses()
@@ -82,7 +86,7 @@ namespace Ex02
 
         public static bool PrintWinMessage(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
         {
-            Console.WriteLine($"Congratulations! You guessed after {i_StartingNumberOfGuess - i_NumberOfGuessingRemained} steps!");
+            Console.WriteLine($"Congratulations! You guessed after {i_StartingNumberOfGuess - i_NumberOfGuessingRemained + 1} steps!");
             return askToPlayAgain();
         }
 
@@ -92,9 +96,10 @@ namespace Ex02
             return askToPlayAgain();
         }
 
-        public static void PrintQuitMessage()
+        public static bool PrintQuitMessage()
         {
             Console.WriteLine("Thank you for playing! Come Again! Goodbye!");
+            return false;
         }
 
         private static bool askToPlayAgain()
@@ -111,7 +116,7 @@ namespace Ex02
                 userInput = Console.ReadLine()?.ToUpper();
             }
 
-            return userInput == k_YesIndicator;
+            return (userInput == k_YesIndicator);
         }
     }
 }

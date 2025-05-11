@@ -1,5 +1,4 @@
-﻿
-namespace Ex02
+﻿namespace Ex02
 {
     public class InputValidator
     {
@@ -10,12 +9,11 @@ namespace Ex02
         {
             io_UserDecidedToQuit = false;
             ReasonOfBadInput = string.Empty;
-            bool isInputValid = false;
+            bool isInputValid = true;
 
             if(i_Input == "Q")
             {
                 io_UserDecidedToQuit = true;
-                isInputValid = true;
             }
             else if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
             {
@@ -49,6 +47,7 @@ namespace Ex02
                 }
 
                 int index = currentCharacter - 'A';
+
                 if (uniqueLetters[index])
                 {
                     ReasonOfBadInput = "Each letter must be UNIQUE.";
