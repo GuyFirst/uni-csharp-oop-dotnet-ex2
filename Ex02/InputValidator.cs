@@ -4,7 +4,7 @@
     {
         private const int k_NumberOfValidCharactersInUserGuess = 4;
         private const int k_NumberOfUniqueLetters = 8;
-        public string ReasonOfBadInput {  get; private set; } //TODO decide if changing to const
+        public string ReasonOfBadInput {  get; private set; } 
         public bool IsInputValid(string i_Input, out bool io_UserDecidedToQuit)
         {
             io_UserDecidedToQuit = false;

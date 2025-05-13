@@ -4,8 +4,12 @@ namespace Ex02
 {
     public class HistoryOfGuesses
     {
-        public List<RowOfGuesses> RowOfGuesses;
+        public List<RowOfGuesses> RowOfGuesses { get; }
 
+        public HistoryOfGuesses()
+        {
+            RowOfGuesses = new List<RowOfGuesses>();
+        }
 
         public void AddNewRow(GuessHandler i_Guess, FeedbackOfGuess i_Feedback)
         {

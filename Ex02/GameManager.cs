@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace Ex02
@@ -22,9 +23,41 @@ namespace Ex02
         }
 
         private void runGame()
-        {
-            //implementtttttttttttttttttttttttttttttttttttttt
+        {            
+            int numberOfGuesses = ConsoleUI.AskUserToEnterNumberOfGuesses();
+            string secretString = SecretWordGenerator.GenerateSecretWord();
+            GuessHandler secretWord = ConsoleUI.ConvertStringToGuessHandler(secretString);
+
+            GameData gameData = new GameData(secretString, numberOfGuesses);
+            gameData.SecretWord = secretWord;
+
+            while (gameData.RemainingNumberOfGuesses > 0 && !WinFlag && !QuittingGameFlag)
+            {
+                ConsoleUI.ShowBoard(gameData.HistoryOfGuesses, gameData.r_MaxUserGuesses);
+
+                bool userWantsToQuit;
+                GuessHandler userGuess = ConsoleUI.ReadGuessFromUser(out userWantsToQuit);
+                QuittingGameFlag = userWantsToQuit;
+
+                if (QuittingGameFlag)
+                {
+                    break;
+                }
+
+                FeedbackOfGuess feedback = calculateFeedbackOnGuess(userGuess, gameData.SecretWord);
+                gameData.AddGuessAndFeedback(userGuess, feedback);
+
+                WinFlag = checkIfGuessCorrect(feedback);
+                gameData.RemainingNumberOfGuesses--;
+            }
+
+            bool playAgain = manageEndOfGame(gameData.r_MaxUserGuesses, gameData.RemainingNumberOfGuesses);
+            if (!playAgain)
+            {
+                QuittingGameFlag = true;
+            }
         }
+
 
         private FeedbackOfGuess calculateFeedbackOnGuess(GuessHandler i_UserGuess, GuessHandler i_SecretCode)
         {
@@ -62,7 +95,10 @@ namespace Ex02
             return new FeedbackOfGuess(feedback);
         }
 
-
+        private bool checkIfGuessCorrect(FeedbackOfGuess i_Feedback)
+        {
+            return i_Feedback.feedbackOfGuessTypes.All(f => f == FeedbackOfGuess.FeedbackOfGuessType.ExactPlace);
+        }
 
         private bool manageEndOfGame(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
         {
