@@ -35,26 +35,25 @@ namespace Ex02
             }
 
             // 2) Prepare empty board and display it
-            string[,] gameHistory = new string[maxGuesses, 2];
+            string[,] gameHistory = new string[maxGuesses, GameData.k_ColumnSize];
             ConsoleUI.PrintBoard(gameHistory, maxGuesses);
 
             // 3) Generate secret and initialize engine
-            int wordLength = 4;
-            List<char> allowed = new List<char>
-                { 'A','B','C','D','E','F','G','H' };
+            const int k_WordLength = GameData.k_WordLength;
+            List<char> allowed = new List<char> { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
             InputValidator validator =
-                new InputValidator(wordLength, allowed);
+                new InputValidator(k_WordLength, allowed);
             var generator = new SecretWordGenerator(allowed, new Random());
-            char[] secret = generator.Generate(wordLength);
+            char[] secret = generator.Generate(k_WordLength);
 
-            var engine = new GameManager<char>();
-            engine.Initialize(secret, maxGuesses);
+            var gameManager = new GameManager<char>();
+            gameManager.Initialize(secret, maxGuesses);
 
 
             // 4) Main guessing loop
             bool quitRequested = false;
             int turn = 0;
-            while (engine.State == GameState.InProgress)
+            while (gameManager.State == GameState.InProgress)
             {
                 Console.WriteLine("Enter your next guess (or 'Q' to quit): ");
                 string guessInput = Console.ReadLine();
@@ -73,10 +72,10 @@ namespace Ex02
                 }
 
                 // submit to core
-                var attempt = engine.SubmitGuess(guessInput.ToCharArray());
+                var attempt = gameManager.SubmitGuess(guessInput.ToCharArray());
 
                 // build feedback: V, then X, then spaces
-                char[] feedbackArr = new char[wordLength];
+                char[] feedbackArr = new char[k_WordLength];
                 int idx = 0;
                 foreach (var f in attempt.Feedback)
                 {
@@ -88,7 +87,7 @@ namespace Ex02
                     if (f == LetterFeedback.RightLetterWrongSpot)
                         feedbackArr[idx++] = 'X';
                 }
-                while (idx < wordLength)
+                while (idx < k_WordLength)
                     feedbackArr[idx++] = ' ';
 
                 // record and redraw
@@ -103,22 +102,25 @@ namespace Ex02
 
             if (quitRequested)
             {
-                Console.WriteLine("You quit the game. The secret was: " + new string(secret));
+                Console.WriteLine("You quit the game. The secret word was: " + new string(secret));
                 return false;   // do not prompt to play again
             }
-            else if (engine.State == GameState.Won)
-            {
-                Console.WriteLine($"Congratulations! You guessed after {turn} steps!");
-            }
-            else
-            {
-                Console.WriteLine("No more guesses allowed. You Lost!");
-            }
+
+            Console.WriteLine(
+                gameManager.State == GameState.Won
+                    ? $"Congratulations! You guessed after {turn} steps!"
+                    : "No more guesses allowed. You Lost!");
 
             // 6) Ask to play again
             Console.Write("Would you like to play again? (Y/N): ");
-            string answer = Console.ReadLine();
-            return string.Equals(answer, "Y", StringComparison.OrdinalIgnoreCase);
+            string playAgain = Console.ReadLine();
+            while(!string.Equals(playAgain, "Y") && !string.Equals(playAgain, "N"))
+            {
+                Console.WriteLine("Please enter only 'Y' (yes) or 'N' (no)!");
+                playAgain = Console.ReadLine();
+            }
+
+            return string.Equals(playAgain, "Y");
         }
     }
 }

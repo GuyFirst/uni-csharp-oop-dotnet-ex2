@@ -14,16 +14,16 @@ namespace Ex02
             Console.WriteLine("|" + guessString + "|" + feedbackString + "|");
         }
 
-        private string BuildFeedbackString(LetterFeedback[] feedback)
+        private string BuildFeedbackString(LetterFeedback[] i_Feedback)
         {
-            char[] symbols = new char[feedback.Length];
-            for (int i = 0; i < feedback.Length; i++)
+            char[] symbols = new char[i_Feedback.Length];
+            for (int i = 0; i < i_Feedback.Length; i++)
             {
-                if (feedback[i] == LetterFeedback.CorrectSpot)
+                if (i_Feedback[i] == LetterFeedback.CorrectSpot)
                 {
                     symbols[i] = 'V';
                 }
-                else if (feedback[i] == LetterFeedback.RightLetterWrongSpot)
+                else if (i_Feedback[i] == LetterFeedback.RightLetterWrongSpot)
                 {
                     symbols[i] = 'X';
                 }

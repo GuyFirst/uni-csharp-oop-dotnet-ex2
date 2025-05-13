@@ -14,10 +14,10 @@ namespace Ex02
         public TSymbol[] Guess { get; private set; }
         public LetterFeedback[] Feedback { get; private set; }
 
-        public GuessAttempt(TSymbol[] guess, LetterFeedback[] feedback)
+        public GuessAttempt(TSymbol[] i_Guess, LetterFeedback[] i_Feedback)
         {
-            this.Guess = guess;
-            this.Feedback = feedback;
+            this.Guess = i_Guess;
+            this.Feedback = i_Feedback;
         }
     }
 }

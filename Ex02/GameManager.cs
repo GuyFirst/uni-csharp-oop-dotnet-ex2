@@ -12,50 +12,50 @@ namespace Ex02
 
     public class GameManager<TSymbol>
     {
-        private TSymbol[] m_secret;
-        private int m_remainingGuesses;
-        private int m_maxGuesses;
+        private TSymbol[] m_Secret;
+        private int m_RemainingGuesses;
+        private int m_MaxGuesses;
 
         public GameState State { get; private set; }
 
         public int MaxGuesses
         {
-            get { return m_maxGuesses; }
+            get { return m_MaxGuesses; }
         }
 
         public int RemainingGuesses
         {
-            get { return m_remainingGuesses; }
+            get { return m_RemainingGuesses; }
         }
 
         public int WordLength
         {
-            get { return m_secret.Length; }
+            get { return m_Secret.Length; }
         }
 
-        public void Initialize(TSymbol[] secret, int maxGuesses)
+        public void Initialize(TSymbol[] i_Secret, int i_MaxGuesses)
         {
-            this.m_secret = secret;
-            this.m_maxGuesses = maxGuesses;
-            this.m_remainingGuesses = maxGuesses;
+            this.m_Secret = i_Secret;
+            this.m_MaxGuesses = i_MaxGuesses;
+            this.m_RemainingGuesses = i_MaxGuesses;
             this.State = GameState.InProgress;
         }
 
-        public GuessAttempt<TSymbol> SubmitGuess(TSymbol[] guess)
+        public GuessAttempt<TSymbol> SubmitGuess(TSymbol[] i_Guess)
         {
-            if (guess.Length != m_secret.Length)
+            if (i_Guess.Length != m_Secret.Length)
             {
                 throw new ArgumentException("Guess length must match secret length.");
             }
 
-            LetterFeedback[] feedback = new LetterFeedback[guess.Length];
-            bool[] secretMatched = new bool[guess.Length];
-            bool[] guessMatched = new bool[guess.Length];
+            LetterFeedback[] feedback = new LetterFeedback[i_Guess.Length];
+            bool[] secretMatched = new bool[i_Guess.Length];
+            bool[] guessMatched = new bool[i_Guess.Length];
 
             // 1) Exact matches
-            for (int i = 0; i < guess.Length; i++)
+            for (int i = 0; i < i_Guess.Length; i++)
             {
-                if (guess[i].Equals(m_secret[i]))
+                if (i_Guess[i].Equals(m_Secret[i]))
                 {
                     feedback[i] = LetterFeedback.CorrectSpot;
                     secretMatched[i] = true;
@@ -64,14 +64,14 @@ namespace Ex02
             }
 
             // 2) Right letter, wrong spot
-            for (int i = 0; i < guess.Length; i++)
+            for (int i = 0; i < i_Guess.Length; i++)
             {
                 if (guessMatched[i] == false)
                 {
                     bool found = false;
-                    for (int j = 0; j < m_secret.Length; j++)
+                    for (int j = 0; j < m_Secret.Length; j++)
                     {
-                        if (secretMatched[j] == false && guess[i].Equals(m_secret[j]))
+                        if (secretMatched[j] == false && i_Guess[i].Equals(m_Secret[j]))
                         {
                             found = true;
                             secretMatched[j] = true;
@@ -90,25 +90,25 @@ namespace Ex02
                 }
             }
 
-            m_remainingGuesses--;
+            m_RemainingGuesses--;
 
-            if (AllCorrect(feedback))
+            if (allCorrect(feedback))
             {
                 this.State = GameState.Won;
             }
-            else if (m_remainingGuesses <= 0)
+            else if (m_RemainingGuesses <= 0)
             {
                 this.State = GameState.Lost;
             }
 
-            return new GuessAttempt<TSymbol>(guess, feedback);
+            return new GuessAttempt<TSymbol>(i_Guess, feedback);
         }
 
-        private bool AllCorrect(LetterFeedback[] feedback)
+        private bool allCorrect(LetterFeedback[] i_Feedback)
         {
-            for (int i = 0; i < feedback.Length; i++)
+            foreach(LetterFeedback positionInFeedback in i_Feedback)
             {
-                if (feedback[i] != LetterFeedback.CorrectSpot)
+                if (positionInFeedback != LetterFeedback.CorrectSpot)
                 {
                     return false;
                 }
