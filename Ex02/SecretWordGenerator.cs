@@ -18,6 +18,7 @@ namespace Ex02
             for (int i = 0; i < k_SecretWordLength; i++)
             {
                 int randomIndex = sr_RandomGenerator.Next(availableChars.Count);
+ 
                 secretWord.Append(availableChars[randomIndex]);
                 availableChars.RemoveAt(randomIndex);
             }

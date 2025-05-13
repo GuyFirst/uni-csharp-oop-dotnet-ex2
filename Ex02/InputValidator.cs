@@ -1,21 +1,19 @@
-﻿
-namespace Ex02
+﻿namespace Ex02
 {
     public class InputValidator
     {
         private const int k_NumberOfValidCharactersInUserGuess = 4;
         private const int k_NumberOfUniqueLetters = 8;
-        public string ReasonOfBadInput {  get; private set; } //TODO decide if changing to const
-        public bool IsInputValid(string i_Input, out bool o_UserDecidedToQuit)
+        public string ReasonOfBadInput {  get; private set; } 
+        public bool IsInputValid(string i_Input, out bool io_UserDecidedToQuit)
         {
-            o_UserDecidedToQuit = false;
+            io_UserDecidedToQuit = false;
             ReasonOfBadInput = string.Empty;
-            bool isInputValid = false;
+            bool isInputValid = true;
 
             if(i_Input == "Q")
             {
-                o_UserDecidedToQuit = true;
-                isInputValid = true;
+                io_UserDecidedToQuit = true;
             }
             else if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
             {
@@ -49,6 +47,7 @@ namespace Ex02
                 }
 
                 int index = currentCharacter - 'A';
+
                 if (uniqueLetters[index])
                 {
                     ReasonOfBadInput = "Each letter must be UNIQUE.";

@@ -1,27 +1,23 @@
-﻿using System;
-
-namespace Ex02
+﻿namespace Ex02
 {
     public class GameData
-    {
-        public string SecretWord { get; set; }
+    {   
         public readonly int r_MaxUserGuesses;
-        private const int k_ColumnSize = 2;
-        public string[,] GuessesAndResultsHistory { get; set; } 
+        public int RemainingNumberOfGuesses { get; set; }
+        public GuessHandler SecretWord { get; set; }
+        public HistoryOfGuesses HistoryOfGuesses { get; set; }
 
         public GameData(string i_SecretWord, int i_MaxUserGuesses) 
         {
-            SecretWord = i_SecretWord;
+            SecretWord = new GuessHandler();
+            HistoryOfGuesses = new HistoryOfGuesses();
             r_MaxUserGuesses = i_MaxUserGuesses;
-            GuessesAndResultsHistory = new string[r_MaxUserGuesses, k_ColumnSize];
+            RemainingNumberOfGuesses = i_MaxUserGuesses;
         }
 
-        public string addGuessAndFeedback(string i_Guess, string i_Feedback)
+        public void AddGuessAndFeedback(GuessHandler i_Guess, FeedbackOfGuess i_Feedback)
         {
-            
+            HistoryOfGuesses.AddNewRow(i_Guess, i_Feedback);
         }
-
-
-        
     }
 }
