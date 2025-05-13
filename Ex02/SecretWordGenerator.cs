@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Ex02
 {
-    public class SecretWordGenerator //ROY
+    public class SecretWordGenerator
     {
-        private static readonly Random sr_RandomGenerator = new Random();
-        private static readonly char[] sr_CharsBank = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
-        public const int k_SecretWordLength = 4;     //remember CONST MEANS #DEFINE IN CSHARP
+        private List<char> m_allowedLetters;
+        private Random m_random;
 
-        public static string GenerateSecretWord()
+        public SecretWordGenerator(List<char> allowedLetters, Random random)
         {
-            StringBuilder secretWord = new StringBuilder();
-            List<char> availableChars = new List<char>(sr_CharsBank);
+            this.m_allowedLetters = new List<char>(allowedLetters);
+            this.m_random = random;
+        }
 
-            for (int i = 0; i < k_SecretWordLength; i++)
+        public char[] Generate(int wordLength)
+        {
+            char[] secret = new char[wordLength];
+            List<char> pool = new List<char>(m_allowedLetters);
+
+            for(int i = 0; i < wordLength; i++)
             {
-                int randomIndex = sr_RandomGenerator.Next(availableChars.Count);
- 
-                secretWord.Append(availableChars[randomIndex]);
-                availableChars.RemoveAt(randomIndex);
+                int index = m_random.Next(0, pool.Count);
+                secret[i] = pool[index];
+                pool.RemoveAt(index);
             }
 
-            return secretWord.ToString();
+            return secret;
         }
     }
 }

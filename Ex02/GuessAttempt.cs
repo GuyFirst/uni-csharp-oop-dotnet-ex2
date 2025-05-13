@@ -1,47 +1,23 @@
 ﻿using System;
-using System.Text;
 
 namespace Ex02
 {
-    public class GuessAttempt
+    public enum LetterFeedback
     {
-        public readonly string r_SecretCode;
+        Wrong,
+        RightLetterWrongSpot,
+        CorrectSpot
+    }
 
-        public GuessAttempt(string i_SecretCode)
+    public class GuessAttempt<TSymbol>
+    {
+        public TSymbol[] Guess { get; private set; }
+        public LetterFeedback[] Feedback { get; private set; }
+
+        public GuessAttempt(TSymbol[] guess, LetterFeedback[] feedback)
         {
-            r_SecretCode = i_SecretCode;
+            this.Guess = guess;
+            this.Feedback = feedback;
         }
-        public string GiveFeedbackOnGuess(string i_UserGuess)
-        {
-            int countV = 0;
-            int countX = 0;
-
-            for (int i = 0; i < i_UserGuess.Length; ++i)
-            {
-                for (int j = 0; j < r_SecretCode.Length; ++j)
-                {
-                    if (i_UserGuess[i] == r_SecretCode[j])
-                    {
-                        if (i == j)
-                        {
-                            countV++;
-                        }            
-                        else
-                        {
-                            countX++;
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            StringBuilder feedback = new StringBuilder();
-            feedback.Append('V', countV);
-            feedback.Append('X', countX);
-
-            return feedback.ToString();
-        }
-
     }
 }

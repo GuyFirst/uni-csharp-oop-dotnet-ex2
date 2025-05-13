@@ -1,81 +1,120 @@
-﻿using System;
+﻿using Ex02;
+using System;
 
 namespace Ex02
 {
-    public class GameManager
+    public enum GameState
     {
-        public bool QuittingGameFlag { get; set; }
+        InProgress,
+        Won,
+        Lost
+    }
 
-        public bool WinFlag { get; set; }
+    public class GameManager<TSymbol>
+    {
+        private TSymbol[] m_secret;
+        private int m_remainingGuesses;
+        private int m_maxGuesses;
 
-        public void StartNewGame()
+        public GameState State { get; private set; }
+
+        public int MaxGuesses
         {
-            while(true)
-            {
-                runGame();
-                if(QuittingGameFlag)
-                {
-                    break;
-                }
-            }
+            get { return m_maxGuesses; }
         }
 
-        private void runGame()
+        public int RemainingGuesses
         {
-            const string k_WinnerResult = "VVVV";
-            string secretWord = SecretWordGenerator.GenerateSecretWord();
+            get { return m_remainingGuesses; }
+        }
 
-            ConsoleUtils.Screen.Clear();
-            GameData currentGameData = new GameData(secretWord, ConsoleUI.AskUserToEnterNumberOfGuesses());
-            GuessAttempt activeGuessAttempt = new GuessAttempt(secretWord);
+        public int WordLength
+        {
+            get { return m_secret.Length; }
+        }
 
-            ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
-            string userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit);
-            bool hasGameEnded = (WinFlag || currentGameData.RemainingNumberOfGuesses <= 0);
+        public void Initialize(TSymbol[] secret, int maxGuesses)
+        {
+            this.m_secret = secret;
+            this.m_maxGuesses = maxGuesses;
+            this.m_remainingGuesses = maxGuesses;
+            this.State = GameState.InProgress;
+        }
 
-            while (!hasGameEnded)
+        public GuessAttempt<TSymbol> SubmitGuess(TSymbol[] guess)
+        {
+            if (guess.Length != m_secret.Length)
             {
-                string feedbackOnGuess = activeGuessAttempt.GiveFeedbackOnGuess(userInputGuess);
+                throw new ArgumentException("Guess length must match secret length.");
+            }
 
-                currentGameData.AddGuessAndFeedback(userInputGuess, feedbackOnGuess);
-                ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
-                WinFlag = (feedbackOnGuess.Equals(k_WinnerResult));
-                hasGameEnded = (--currentGameData.RemainingNumberOfGuesses <= 0) || WinFlag;
-                if (!hasGameEnded)
+            LetterFeedback[] feedback = new LetterFeedback[guess.Length];
+            bool[] secretMatched = new bool[guess.Length];
+            bool[] guessMatched = new bool[guess.Length];
+
+            // 1) Exact matches
+            for (int i = 0; i < guess.Length; i++)
+            {
+                if (guess[i].Equals(m_secret[i]))
                 {
-                    userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out o_UserDecidedToQuit);
+                    feedback[i] = LetterFeedback.CorrectSpot;
+                    secretMatched[i] = true;
+                    guessMatched[i] = true;
                 }
             }
 
-            QuittingGameFlag = o_UserDecidedToQuit;
-
-            // Reveal the secret word when the game ends
-            ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses, secretWord);
-
-            bool playAgain = manageEndOfGame(
-                currentGameData.r_MaxUserGuesses,
-                currentGameData.RemainingNumberOfGuesses);
-
-            if (!playAgain)
+            // 2) Right letter, wrong spot
+            for (int i = 0; i < guess.Length; i++)
             {
-                QuittingGameFlag = true;
+                if (guessMatched[i] == false)
+                {
+                    bool found = false;
+                    for (int j = 0; j < m_secret.Length; j++)
+                    {
+                        if (secretMatched[j] == false && guess[i].Equals(m_secret[j]))
+                        {
+                            found = true;
+                            secretMatched[j] = true;
+                            break;
+                        }
+                    }
+
+                    if (found)
+                    {
+                        feedback[i] = LetterFeedback.RightLetterWrongSpot;
+                    }
+                    else
+                    {
+                        feedback[i] = LetterFeedback.Wrong;
+                    }
+                }
             }
+
+            m_remainingGuesses--;
+
+            if (AllCorrect(feedback))
+            {
+                this.State = GameState.Won;
+            }
+            else if (m_remainingGuesses <= 0)
+            {
+                this.State = GameState.Lost;
+            }
+
+            return new GuessAttempt<TSymbol>(guess, feedback);
         }
 
-        private bool manageEndOfGame(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
+        private bool AllCorrect(LetterFeedback[] feedback)
         {
-            if(WinFlag)
+            for (int i = 0; i < feedback.Length; i++)
             {
-                return ConsoleUI.PrintWinMessage(i_StartingNumberOfGuess, i_NumberOfGuessingRemained);
+                if (feedback[i] != LetterFeedback.CorrectSpot)
+                {
+                    return false;
+                }
             }
-            else if(!QuittingGameFlag)
-            {
-                return ConsoleUI.PrintLoseMessage();
-            }
-            else
-            {
-                return ConsoleUI.PrintQuitMessage();
-            }
+
+            return true;
         }
     }
 }
