@@ -152,8 +152,16 @@ namespace Ex02
 
         private static string ConvertGuessHandlerToString(GuessHandler i_Guess)
         {
-            return string.Concat(i_Guess.Guess.Select(g => g.ToString()));
+            StringBuilder result = new StringBuilder();
+
+            foreach (GuessHandler.GuessCollectionOptions letter in i_Guess.Guess)
+            {
+                result.Append(letter.ToString());
+            }
+
+            return result.ToString();
         }
+
 
         private static string ConvertFeedbackToString(FeedbackOfGuess i_Feedback)
         {
