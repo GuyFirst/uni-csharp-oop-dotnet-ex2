@@ -37,12 +37,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleUI.cs" />
+    <Compile Include="FeedbackOfGuess.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="GameData.cs" />
-    <Compile Include="GuessAttempt.cs" />
+    <Compile Include="HistoryOfGuesses.cs" />
     <Compile Include="InputValidator.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="RowOfGuesses.cs" />
     <Compile Include="SecretWordGenerator.cs" />
+    <Compile Include="GuessHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Ex02.ConsoleUtils">

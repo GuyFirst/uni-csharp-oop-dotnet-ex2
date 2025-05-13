@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Ex02
 {
@@ -22,45 +23,46 @@ namespace Ex02
 
         private void runGame()
         {
-            const string k_WinnerResult = "VVVV";
-            string secretWord = SecretWordGenerator.GenerateSecretWord();
-
-            ConsoleUtils.Screen.Clear();
-            GameData currentGameData = new GameData(secretWord, ConsoleUI.AskUserToEnterNumberOfGuesses());
-            GuessAttempt activeGuessAttempt = new GuessAttempt(secretWord);
-
-            ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
-            string userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit);
-            bool hasGameEnded = (WinFlag || currentGameData.RemainingNumberOfGuesses <= 0);
-
-            while (!hasGameEnded)
-            {
-                string feedbackOnGuess = activeGuessAttempt.GiveFeedbackOnGuess(userInputGuess);
-
-                currentGameData.AddGuessAndFeedback(userInputGuess, feedbackOnGuess);
-                ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses);
-                WinFlag = (feedbackOnGuess.Equals(k_WinnerResult));
-                hasGameEnded = (--currentGameData.RemainingNumberOfGuesses <= 0) || WinFlag;
-                if (!hasGameEnded)
-                {
-                    userInputGuess = ConsoleUI.AskFromUserToTakeAGuess(out o_UserDecidedToQuit);
-                }
-            }
-
-            QuittingGameFlag = o_UserDecidedToQuit;
-
-            // Reveal the secret word when the game ends
-            ConsoleUI.PrintBoard(currentGameData.GuessesAndResultsHistory, currentGameData.r_MaxUserGuesses, secretWord);
-
-            bool playAgain = manageEndOfGame(
-                currentGameData.r_MaxUserGuesses,
-                currentGameData.RemainingNumberOfGuesses);
-
-            if (!playAgain)
-            {
-                QuittingGameFlag = true;
-            }
+            //implementtttttttttttttttttttttttttttttttttttttt
         }
+
+        private FeedbackOfGuess calculateFeedbackOnGuess(GuessHandler i_UserGuess, GuessHandler i_SecretCode)
+        {
+            int guessLength = i_UserGuess.Guess.Count;
+            FeedbackOfGuess.FeedbackOfGuessType[] feedback = new FeedbackOfGuess.FeedbackOfGuessType[guessLength];
+
+            int i = 0;
+            foreach (var guessLetter in i_UserGuess.Guess)
+            {
+                feedback[i] = FeedbackOfGuess.FeedbackOfGuessType.NotInGuess;
+
+                int j = 0;
+                foreach (var secretLetter in i_SecretCode.Guess)
+                {
+                    if (guessLetter == secretLetter)
+                    {
+                        if (i == j)
+                        {
+                            feedback[i] = FeedbackOfGuess.FeedbackOfGuessType.ExactPlace;
+                        }
+                        else
+                        {
+                            feedback[i] = FeedbackOfGuess.FeedbackOfGuessType.WrongPlace;
+                        }
+
+                        break;
+                    }
+
+                    j++;
+                }
+
+                i++;
+            }
+
+            return new FeedbackOfGuess(feedback);
+        }
+
+
 
         private bool manageEndOfGame(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
         {
