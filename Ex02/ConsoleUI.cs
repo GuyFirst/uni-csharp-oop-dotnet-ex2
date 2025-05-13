@@ -103,13 +103,20 @@ namespace Ex02
         {
             string userInput = AskFromUserToTakeAGuess(out o_UserWantsToQuit);
 
+            GuessHandler userGuess;
+
             if (o_UserWantsToQuit)
             {
-                return default;
+                userGuess = default;
+            }
+            else
+            {
+                userGuess = ConvertStringToGuessHandler(userInput);
             }
 
-            return ConvertStringToGuessHandler(userInput);
+            return userGuess;
         }
+
 
         public static void ShowBoard(HistoryOfGuesses i_History, int i_MaxTries, GuessHandler i_SecretWord = default)
         {
