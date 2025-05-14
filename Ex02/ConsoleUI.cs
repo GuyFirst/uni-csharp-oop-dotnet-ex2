@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Ex02
 {
-    public class ConsoleUI      //ROY
+    public class ConsoleUI
     {
+        private const int k_GuessColumn = 0;
+        private const int k_ResultColumn = 1;
+        private const int k_ResultPrintPadding = 7;
+
         public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries, string i_SecretWord = null)
         {
-            const int k_ResultPrintPadding = 7;
-
             ConsoleUtils.Screen.Clear();
             Console.WriteLine("Current board status:");
             Console.WriteLine("|Pins:    |Result:|");
             Console.WriteLine("|=========|=======|");
+
             if (i_SecretWord != null)
             {
                 string spacedSecretWord = string.Join(" ", i_SecretWord.ToCharArray());
@@ -23,10 +29,11 @@ namespace Ex02
             }
 
             Console.WriteLine("|=========|=======|");
+
             for (int turnIndex = 0; turnIndex < i_MaxTries; turnIndex++)
             {
-                string historyGuess = i_GameHistory[turnIndex, GameData.k_Guess] ?? "";
-                string historyResult = i_GameHistory[turnIndex, GameData.k_Result] ?? "";
+                string historyGuess = i_GameHistory[turnIndex, k_GuessColumn] ?? "";
+                string historyResult = i_GameHistory[turnIndex, k_ResultColumn] ?? "";
 
                 if (string.IsNullOrEmpty(historyGuess) && string.IsNullOrEmpty(historyResult))
                 {
@@ -38,6 +45,7 @@ namespace Ex02
                     string spacedHistoryResult = string.Join(" ", historyResult.ToCharArray()).PadRight(k_ResultPrintPadding);
                     Console.WriteLine($"| {spacedHistoryGuess} |{spacedHistoryResult}|");
                 }
+
                 Console.WriteLine("|=========|=======|");
             }
 
@@ -47,7 +55,7 @@ namespace Ex02
         public static int AskUserToEnterNumberOfGuesses()
         {
             bool validGuess = false;
-            int numberOfGuesses = 0;
+            int numberOfGuesses = 0; 
 
             while (!validGuess)
             {
@@ -75,20 +83,112 @@ namespace Ex02
             string userInput = null;
 
             Console.WriteLine("Please type your next guess <A B C D> or 'Q' to quit");
+
             while (!isUserInputValid)
             {
-                userInput = Console.ReadLine()?.ToUpper();
+                userInput = Console.ReadLine(); // CASE-SENSITIVE 
                 isUserInputValid = inputValidator.IsInputValid(userInput, out o_UserDecidedToQuit);
+
                 if (!isUserInputValid && !o_UserDecidedToQuit)
                 {
                     Console.WriteLine(inputValidator.ReasonOfBadInput);
                     Console.WriteLine("Please type your next guess <A B C D> or 'Q' to quit");
-                    continue;
                 }
-                isUserInputValid = true;
             }
 
             return userInput;
+        }
+
+        public static GuessHandler ConvertStringToGuessHandler(string i_Input)
+        {
+            List<GuessHandler.GuessCollectionOptions> guessList = new List<GuessHandler.GuessCollectionOptions>();
+
+            foreach (char ch in i_Input)
+            {
+                if (Enum.TryParse(ch.ToString(), ignoreCase: false, out GuessHandler.GuessCollectionOptions parsedChar))
+                {
+                    guessList.Add(parsedChar);
+                }
+            }
+
+            return new GuessHandler(guessList);
+        }
+
+        public static GuessHandler ReadGuessFromUser(out bool o_UserWantsToQuit)
+        {
+            string userInput = AskFromUserToTakeAGuess(out o_UserWantsToQuit);
+
+            GuessHandler userGuess;
+
+            if (o_UserWantsToQuit)
+            {
+                userGuess = default;
+            }
+            else
+            {
+                userGuess = ConvertStringToGuessHandler(userInput);
+            }
+
+            return userGuess;
+        }
+
+
+        public static void ShowBoard(HistoryOfGuesses i_History, int i_MaxTries, GuessHandler i_SecretWord = default)
+        {
+            string[,] boardData = ConvertHistoryToStringBoard(i_History, i_MaxTries);
+            string secretAsString = i_SecretWord.Equals(default(GuessHandler)) ? null : ConvertGuessHandlerToString(i_SecretWord);
+            PrintBoard(boardData, i_MaxTries, secretAsString);
+        }
+
+        private static string[,] ConvertHistoryToStringBoard(HistoryOfGuesses i_History, int i_MaxTries)
+        {
+            string[,] board = new string[i_MaxTries, 2];
+            int rowIndex = 0;
+
+            foreach (RowOfGuesses row in i_History.RowOfGuesses)
+            {
+                board[rowIndex, k_GuessColumn] = ConvertGuessHandlerToString(row.UserGuess);
+                board[rowIndex, k_ResultColumn] = ConvertFeedbackToString(row.Feedback);
+                rowIndex++;
+            }
+
+            return board;
+        }
+
+        private static string ConvertGuessHandlerToString(GuessHandler i_Guess)
+        {
+            StringBuilder result = new StringBuilder();
+
+            foreach (GuessHandler.GuessCollectionOptions letter in i_Guess.Guess)
+            {
+                result.Append(letter.ToString());
+            }
+
+            return result.ToString();
+        }
+
+
+        private static string ConvertFeedbackToString(FeedbackOfGuess i_Feedback)
+        {
+            StringBuilder result = new StringBuilder();
+
+            foreach (var feedback in i_Feedback.feedbackOfGuessTypes)
+            {
+                if (feedback == FeedbackOfGuess.FeedbackOfGuessType.ExactPlace)
+                {
+                    result.Append('V');
+                }
+            }
+
+            foreach (var feedback in i_Feedback.feedbackOfGuessTypes)
+            {
+                if (feedback == FeedbackOfGuess.FeedbackOfGuessType.WrongPlace)
+                {
+                    result.Append('X');
+                }
+            }
+
+            return result.ToString();
         }
 
         public static bool PrintWinMessage(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
