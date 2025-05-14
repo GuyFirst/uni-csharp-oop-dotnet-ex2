@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Ex02
@@ -14,6 +15,7 @@ namespace Ex02
         public static void PrintBoard(string[,] i_GameHistory, int i_MaxTries, string i_SecretWord = null)
         {
             ConsoleUtils.Screen.Clear();
+            Console.SetCursorPosition(0, 0);
             Console.WriteLine("Current board status:");
             Console.WriteLine("|Pins:    |Result:|");
             Console.WriteLine("|=========|=======|");
@@ -55,11 +57,12 @@ namespace Ex02
         public static int AskUserToEnterNumberOfGuesses()
         {
             bool validGuess = false;
-            int numberOfGuesses = 0; 
+            int numberOfGuesses = 0;
 
+            ConsoleUtils.Screen.Clear();
             while (!validGuess)
             {
-                Console.WriteLine("Please provide your number of guesses between 4 and 10: ");
+                Console.Write("Please provide your number of guesses between 4 and 10: ");
                 string userInput = Console.ReadLine();
 
                 if (int.TryParse(userInput, out numberOfGuesses) && numberOfGuesses >= 4 && numberOfGuesses <= 10)
@@ -75,21 +78,21 @@ namespace Ex02
             return numberOfGuesses;
         }
 
-        public static string AskFromUserToTakeAGuess(out bool o_UserDecidedToQuit)
+        public static string AskFromUserToTakeAGuess(out bool io_UserDecidedToQuit)
         {
-            o_UserDecidedToQuit = false;
+            io_UserDecidedToQuit = false;
             InputValidator inputValidator = new InputValidator();
             bool isUserInputValid = false;
-            string userInput = null;
+            string userInput = string.Empty;
 
             Console.WriteLine("Please type your next guess <A B C D> or 'Q' to quit");
 
             while (!isUserInputValid)
             {
-                userInput = Console.ReadLine(); // CASE-SENSITIVE 
-                isUserInputValid = inputValidator.IsInputValid(userInput, out o_UserDecidedToQuit);
+                userInput = Console.ReadLine();     // CASE-SENSITIVE 
+                isUserInputValid = inputValidator.IsInputValid(userInput, out io_UserDecidedToQuit);
 
-                if (!isUserInputValid && !o_UserDecidedToQuit)
+                if (!isUserInputValid && !io_UserDecidedToQuit)
                 {
                     Console.WriteLine(inputValidator.ReasonOfBadInput);
                     Console.WriteLine("Please type your next guess <A B C D> or 'Q' to quit");
@@ -101,11 +104,11 @@ namespace Ex02
 
         public static GuessHandler ConvertStringToGuessHandler(string i_Input)
         {
-            List<GuessHandler.GuessCollectionOptions> guessList = new List<GuessHandler.GuessCollectionOptions>();
+            List<GuessHandler.eGuessCollectionOptions> guessList = new List<GuessHandler.eGuessCollectionOptions>();
 
             foreach (char ch in i_Input)
             {
-                if (Enum.TryParse(ch.ToString(), ignoreCase: false, out GuessHandler.GuessCollectionOptions parsedChar))
+                if (Enum.TryParse(ch.ToString(), ignoreCase: false, out GuessHandler.eGuessCollectionOptions parsedChar))
                 {
                     guessList.Add(parsedChar);
                 }
@@ -114,20 +117,10 @@ namespace Ex02
             return new GuessHandler(guessList);
         }
 
-        public static GuessHandler ReadGuessFromUser(out bool o_UserWantsToQuit)
+        public static GuessHandler ReadGuessFromUser(out bool io_UserWantsToQuit)
         {
-            string userInput = AskFromUserToTakeAGuess(out o_UserWantsToQuit);
-
-            GuessHandler userGuess;
-
-            if (o_UserWantsToQuit)
-            {
-                userGuess = default;
-            }
-            else
-            {
-                userGuess = ConvertStringToGuessHandler(userInput);
-            }
+            string userInput = AskFromUserToTakeAGuess(out io_UserWantsToQuit);
+            GuessHandler userGuess = io_UserWantsToQuit ? default : ConvertStringToGuessHandler(userInput);
 
             return userGuess;
         }
@@ -135,31 +128,33 @@ namespace Ex02
 
         public static void ShowBoard(HistoryOfGuesses i_History, int i_MaxTries, GuessHandler i_SecretWord = default)
         {
-            string[,] boardData = ConvertHistoryToStringBoard(i_History, i_MaxTries);
-            string secretAsString = i_SecretWord.Equals(default(GuessHandler)) ? null : ConvertGuessHandlerToString(i_SecretWord);
+            string[,] boardData = convertHistoryToStringBoard(i_History, i_MaxTries);
+            string secretAsString = i_SecretWord.Equals(default(GuessHandler)) ? null : convertGuessHandlerToString(i_SecretWord);
+            
             PrintBoard(boardData, i_MaxTries, secretAsString);
         }
 
-        private static string[,] ConvertHistoryToStringBoard(HistoryOfGuesses i_History, int i_MaxTries)
+        private static string[,] convertHistoryToStringBoard(HistoryOfGuesses i_History, int i_MaxTries)
         {
-            string[,] board = new string[i_MaxTries, 2];
             int rowIndex = 0;
+            const int k_NumberOfColumns = 2;
+            string[,] board = new string[i_MaxTries, k_NumberOfColumns];
 
             foreach (RowOfGuesses row in i_History.RowOfGuesses)
             {
-                board[rowIndex, k_GuessColumn] = ConvertGuessHandlerToString(row.UserGuess);
-                board[rowIndex, k_ResultColumn] = ConvertFeedbackToString(row.Feedback);
+                board[rowIndex, k_GuessColumn] = convertGuessHandlerToString(row.UserGuess);
+                board[rowIndex, k_ResultColumn] = convertFeedbackToString(row.Feedback);
                 rowIndex++;
             }
 
             return board;
         }
 
-        private static string ConvertGuessHandlerToString(GuessHandler i_Guess)
+        private static string convertGuessHandlerToString(GuessHandler i_Guess)
         {
             StringBuilder result = new StringBuilder();
 
-            foreach (GuessHandler.GuessCollectionOptions letter in i_Guess.Guess)
+            foreach (GuessHandler.eGuessCollectionOptions letter in i_Guess.Guess)
             {
                 result.Append(letter.ToString());
             }
@@ -167,26 +162,27 @@ namespace Ex02
             return result.ToString();
         }
 
-
-        private static string ConvertFeedbackToString(FeedbackOfGuess i_Feedback)
+        private static string convertFeedbackToString(FeedbackOfGuess i_Feedback)
         {
             StringBuilder result = new StringBuilder();
+            int exactPlaceCount = 0;
+            int wrongPlaceCount = 0;
 
-            foreach (var feedback in i_Feedback.feedbackOfGuessTypes)
+            foreach (FeedbackOfGuess.eFeedbackOfGuessType feedback in i_Feedback.m_FeedbackOfGuessTypes)
             {
-                if (feedback == FeedbackOfGuess.FeedbackOfGuessType.ExactPlace)
+                switch(feedback)
                 {
-                    result.Append('V');
+                    case FeedbackOfGuess.eFeedbackOfGuessType.ExactPlace:
+                        exactPlaceCount++;
+                        break;
+                    case FeedbackOfGuess.eFeedbackOfGuessType.WrongPlace:
+                        wrongPlaceCount++;
+                        break;
                 }
             }
 
-            foreach (var feedback in i_Feedback.feedbackOfGuessTypes)
-            {
-                if (feedback == FeedbackOfGuess.FeedbackOfGuessType.WrongPlace)
-                {
-                    result.Append('X');
-                }
-            }
+            result.Append('V', exactPlaceCount);
+            result.Append('X', wrongPlaceCount);
 
             return result.ToString();
         }
@@ -194,18 +190,21 @@ namespace Ex02
         public static bool PrintWinMessage(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
         {
             Console.WriteLine($"Congratulations! You guessed after {i_StartingNumberOfGuess - i_NumberOfGuessingRemained} steps!");
+
             return askToPlayAgain();
         }
 
         public static bool PrintLoseMessage()
         {
             Console.WriteLine("No more guesses allowed. You Lost!");
+
             return askToPlayAgain();
         }
 
         public static bool PrintQuitMessage()
         {
             Console.WriteLine("Thank you for playing! Come Again! Goodbye!");
+
             return false;
         }
 

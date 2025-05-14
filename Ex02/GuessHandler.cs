@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Ex02
 {
     public struct GuessHandler
     {
-        public enum GuessCollectionOptions { A, B, C, D, E, F, G, H }
+        public enum eGuessCollectionOptions { A, B, C, D, E, F, G, H }
+        public List<eGuessCollectionOptions> Guess { get; set; }
 
-        public List<GuessCollectionOptions> Guess { get; set; }
-
-        public GuessHandler(List<GuessCollectionOptions> i_Guess) 
+        public GuessHandler(List<eGuessCollectionOptions> i_Guess) 
         {
             Guess = i_Guess;
         }
-       
     }
 }

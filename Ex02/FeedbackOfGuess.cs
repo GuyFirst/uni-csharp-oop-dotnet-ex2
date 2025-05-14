@@ -2,14 +2,12 @@
 {
     public struct FeedbackOfGuess
     {
-        public enum FeedbackOfGuessType { ExactPlace, WrongPlace, NotInGuess }
-        public FeedbackOfGuessType[] feedbackOfGuessTypes;
+        public enum eFeedbackOfGuessType { ExactPlace, WrongPlace, NotInGuess }
+        public eFeedbackOfGuessType[] m_FeedbackOfGuessTypes;
 
-        public FeedbackOfGuess(FeedbackOfGuessType[] i_FeedbackOfGuessTypes)
+        public FeedbackOfGuess(eFeedbackOfGuessType[] i_FeedbackOfGuessTypes)
         {
-            feedbackOfGuessTypes = i_FeedbackOfGuessTypes;
+            m_FeedbackOfGuessTypes = i_FeedbackOfGuessTypes;
         }
-
-
     }
 }
