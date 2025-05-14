@@ -23,7 +23,7 @@ namespace Ex02
         }
 
         private void runGame()
-        {            
+        {
             int numberOfGuesses = ConsoleUI.AskUserToEnterNumberOfGuesses();
             string secretString = SecretWordGenerator.GenerateSecretWord();
             GuessHandler secretWord = ConsoleUI.ConvertStringToGuessHandler(secretString);
@@ -51,13 +51,20 @@ namespace Ex02
                 gameData.RemainingNumberOfGuesses--;
             }
 
+            // Reveal secret if user wins or loses
+            GuessHandler secretWordToReveal =
+                (WinFlag || (!WinFlag && !QuittingGameFlag && gameData.RemainingNumberOfGuesses == 0))
+                ? gameData.SecretWord
+                : default;
+
+            ConsoleUI.ShowBoard(gameData.HistoryOfGuesses, gameData.r_MaxUserGuesses, secretWordToReveal);
+
             bool playAgain = manageEndOfGame(gameData.r_MaxUserGuesses, gameData.RemainingNumberOfGuesses);
             if (!playAgain)
             {
                 QuittingGameFlag = true;
             }
         }
-
 
         private FeedbackOfGuess calculateFeedbackOnGuess(GuessHandler i_UserGuess, GuessHandler i_SecretCode)
         {

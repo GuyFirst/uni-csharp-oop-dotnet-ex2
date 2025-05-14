@@ -6,7 +6,8 @@ namespace Ex02
     {
         private const int k_NumberOfValidCharactersInUserGuess = 4;
         private const int k_NumberOfUniqueLetters = 8;
-        public string ReasonOfBadInput {  get; private set; } 
+        public string ReasonOfBadInput { get; private set; }
+
         public bool IsInputValid(string i_Input, out bool io_UserDecidedToQuit)
         {
             io_UserDecidedToQuit = false;
@@ -20,18 +21,18 @@ namespace Ex02
             }
             else if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
             {
-                ReasonOfBadInput = "You did not submit 4 characters.\nPlease submit exactly 4 unique letters between A and H.";
+                ReasonOfBadInput = "You did not submit 4 characters.\nPlease submit exactly 4 unique uppercase letters between A and H.";
                 isInputValid = false;
             }
             else if (!areCharactersValidAndUnique(i_Input))
             {
-                ReasonOfBadInput += "\nPlease submit exactly 4 unique letters between A and H.";
+                ReasonOfBadInput += "\nPlease submit exactly 4 unique uppercase letters between A and H.";
                 isInputValid = false;
             }
             else
             {
                 isInputValid = true;
-            }   
+            }
 
             return isInputValid;
         }
@@ -44,12 +45,23 @@ namespace Ex02
 
             foreach (char currentCharacter in i_Input)
             {
-
-                if (!(currentCharacter >= 'A' && currentCharacter <= 'H'))
+                if (!char.IsLetter(currentCharacter))
                 {
-                    ReasonOfBadInput = !char.IsLetter(currentCharacter)
-                        ? "You entered non letter characters."
-                        : "You entered a character which is a letter beyond the boundary between A and H.";
+                    ReasonOfBadInput = "You entered non-letter characters.";
+                    areCharactersValidAndUnique = false;
+                    break;
+                }
+
+                if (!char.IsUpper(currentCharacter))
+                {
+                    ReasonOfBadInput = "All characters must be uppercase letters between A and H.";
+                    areCharactersValidAndUnique = false;
+                    break;
+                }
+
+                if (currentCharacter < 'A' || currentCharacter > 'H')
+                {
+                    ReasonOfBadInput = "You entered a character outside the range A-H.";
                     areCharactersValidAndUnique = false;
                     break;
                 }

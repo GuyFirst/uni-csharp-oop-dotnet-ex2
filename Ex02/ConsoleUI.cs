@@ -86,7 +86,7 @@ namespace Ex02
 
             while (!isUserInputValid)
             {
-                userInput = Console.ReadLine()?.ToUpper();
+                userInput = Console.ReadLine(); // CASE-SENSITIVE 
                 isUserInputValid = inputValidator.IsInputValid(userInput, out o_UserDecidedToQuit);
 
                 if (!isUserInputValid && !o_UserDecidedToQuit)
@@ -97,6 +97,21 @@ namespace Ex02
             }
 
             return userInput;
+        }
+
+        public static GuessHandler ConvertStringToGuessHandler(string i_Input)
+        {
+            List<GuessHandler.GuessCollectionOptions> guessList = new List<GuessHandler.GuessCollectionOptions>();
+
+            foreach (char ch in i_Input)
+            {
+                if (Enum.TryParse(ch.ToString(), ignoreCase: false, out GuessHandler.GuessCollectionOptions parsedChar))
+                {
+                    guessList.Add(parsedChar);
+                }
+            }
+
+            return new GuessHandler(guessList);
         }
 
         public static GuessHandler ReadGuessFromUser(out bool o_UserWantsToQuit)
@@ -138,23 +153,6 @@ namespace Ex02
             }
 
             return board;
-        }
-
-
-        public static GuessHandler ConvertStringToGuessHandler(string i_Input)
-        {
-            List<GuessHandler.GuessCollectionOptions> guessList = new List<GuessHandler.GuessCollectionOptions>();
-
-            foreach (char ch in i_Input)
-            {
-                if (Enum.TryParse(ch.ToString(), out GuessHandler.GuessCollectionOptions parsedChar))
-                {
-                    guessList.Add(parsedChar);
-                }
-                
-            }
-
-            return new GuessHandler(guessList);
         }
 
         private static string ConvertGuessHandlerToString(GuessHandler i_Guess)
