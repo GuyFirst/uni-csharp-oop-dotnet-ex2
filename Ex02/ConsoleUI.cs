@@ -55,7 +55,7 @@ namespace Ex02
         public static int AskUserToEnterNumberOfGuesses()
         {
             bool validGuess = false;
-            int numberOfGuesses = 0;
+            int numberOfGuesses = 0; 
 
             while (!validGuess)
             {

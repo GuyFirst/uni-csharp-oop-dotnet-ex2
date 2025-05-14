@@ -1,4 +1,6 @@
-﻿namespace Ex02
+﻿using System;
+
+namespace Ex02
 {
     public class InputValidator
     {
@@ -9,11 +11,12 @@
         {
             io_UserDecidedToQuit = false;
             ReasonOfBadInput = string.Empty;
-            bool isInputValid = true;
+            bool isInputValid;
 
-            if(i_Input == "Q")
+            if (i_Input == "Q")
             {
                 io_UserDecidedToQuit = true;
+                isInputValid = true;
             }
             else if (i_Input.Length != k_NumberOfValidCharactersInUserGuess)
             {
@@ -25,14 +28,19 @@
                 ReasonOfBadInput += "\nPlease submit exactly 4 unique letters between A and H.";
                 isInputValid = false;
             }
+            else
+            {
+                isInputValid = true;
+            }   
 
             return isInputValid;
         }
 
         private bool areCharactersValidAndUnique(string i_Input)
         {
-            bool  areCharactersValidAndUnique = true;
+            bool areCharactersValidAndUnique;
             bool[] uniqueLetters = new bool[k_NumberOfUniqueLetters];
+            ReasonOfBadInput = string.Empty;
 
             foreach (char currentCharacter in i_Input)
             {
@@ -57,6 +65,8 @@
 
                 uniqueLetters[index] = true;
             }
+
+            areCharactersValidAndUnique = (ReasonOfBadInput == string.Empty);
 
             return areCharactersValidAndUnique;
         }

@@ -97,23 +97,39 @@ namespace Ex02
 
         private bool checkIfGuessCorrect(FeedbackOfGuess i_Feedback)
         {
-            return i_Feedback.feedbackOfGuessTypes.All(f => f == FeedbackOfGuess.FeedbackOfGuessType.ExactPlace);
+            bool isGuessCorrect = true;
+
+            for (int i = 0; i < i_Feedback.feedbackOfGuessTypes.Length; i++)
+            {
+                if (i_Feedback.feedbackOfGuessTypes[i] != FeedbackOfGuess.FeedbackOfGuessType.ExactPlace)
+                {
+                    isGuessCorrect = false;
+                    break;
+                }
+            }
+
+            return isGuessCorrect;
         }
 
         private bool manageEndOfGame(int i_StartingNumberOfGuess, int i_NumberOfGuessingRemained)
         {
-            if(WinFlag)
+            bool shouldStartNewGame;
+
+            if (WinFlag)
             {
-                return ConsoleUI.PrintWinMessage(i_StartingNumberOfGuess, i_NumberOfGuessingRemained);
+                shouldStartNewGame = ConsoleUI.PrintWinMessage(i_StartingNumberOfGuess, i_NumberOfGuessingRemained);
             }
-            else if(!QuittingGameFlag)
+            else if (!QuittingGameFlag)
             {
-                return ConsoleUI.PrintLoseMessage();
+                shouldStartNewGame = ConsoleUI.PrintLoseMessage();
             }
             else
             {
-                return ConsoleUI.PrintQuitMessage();
+                shouldStartNewGame = ConsoleUI.PrintQuitMessage();
             }
+
+            return shouldStartNewGame;
         }
+
     }
 }
