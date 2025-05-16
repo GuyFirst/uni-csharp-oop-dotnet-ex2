@@ -23,6 +23,7 @@
             string secretString = SecretWordGenerator.GenerateSecretWord();
             GuessHandler secretWord = ConsoleUI.ConvertStringToGuessHandler(secretString);
             GameData gameData = new GameData(secretString, numberOfGuesses) { SecretWord = secretWord };
+            WinFlag = QuittingGameFlag = false;
 
             while (gameData.RemainingNumberOfGuesses > 0 && !WinFlag && !QuittingGameFlag)
             {
